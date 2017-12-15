@@ -12,7 +12,7 @@ module CanCan
       #   end
       #
       def load_and_authorize_resource(*args)
-        cancan_resource_class.add_before_filter(self, :load_and_authorize_resource, *args)
+        cancan_resource_class.add_before_action(self, :load_and_authorize_resource, *args)
       end
 
       # Sets up a before filter which loads the model resource into an instance variable.
@@ -118,7 +118,7 @@ module CanCan
       #   Passing +true+ will use prepend_before_filter instead of a normal before_filter.
       #
       def load_resource(*args)
-        cancan_resource_class.add_before_filter(self, :load_resource, *args)
+        cancan_resource_class.add_before_action(self, :load_resource, *args)
       end
 
       # Sets up a before filter which authorizes the resource using the instance variable.
@@ -177,7 +177,7 @@ module CanCan
       #   Passing +true+ will use prepend_before_filter instead of a normal before_filter.
       #
       def authorize_resource(*args)
-        cancan_resource_class.add_before_filter(self, :authorize_resource, *args)
+        cancan_resource_class.add_before_action(self, :authorize_resource, *args)
       end
 
       # Skip both the loading and authorization behavior of CanCan for this given controller. This is primarily
@@ -270,7 +270,7 @@ module CanCan
       #
       # Any arguments are passed to the +before_filter+ it triggers.
       def skip_authorization_check(*args)
-        self.before_filter(*args) do |controller|
+        self.before_action(*args) do |controller|
           controller.instance_variable_set(:@_authorized, true)
         end
       end

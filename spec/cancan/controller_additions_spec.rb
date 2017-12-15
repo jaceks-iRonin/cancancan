@@ -33,38 +33,38 @@ describe CanCan::ControllerAdditions do
   it "load_and_authorize_resource setups a before filter which passes call to ControllerResource" do
     expect(cancan_resource_class = double).to receive(:load_and_authorize_resource)
     allow(CanCan::ControllerResource).to receive(:new).with(@controller, nil, :foo => :bar) {cancan_resource_class }
-    expect(@controller_class).to receive(:before_filter).with({}) { |options, &block| block.call(@controller) }
+    expect(@controller_class).to receive(:before_action).with({}) { |options, &block| block.call(@controller) }
     @controller_class.load_and_authorize_resource :foo => :bar
   end
 
   it "load_and_authorize_resource properly passes first argument as the resource name" do
     expect(cancan_resource_class = double).to receive(:load_and_authorize_resource)
     allow(CanCan::ControllerResource).to receive(:new).with(@controller, :project, :foo => :bar) {cancan_resource_class}
-    expect(@controller_class).to receive(:before_filter).with({}) { |options, &block| block.call(@controller) }
+    expect(@controller_class).to receive(:before_action).with({}) { |options, &block| block.call(@controller) }
     @controller_class.load_and_authorize_resource :project, :foo => :bar
   end
 
   it "load_and_authorize_resource with :prepend prepends the before filter" do
-    expect(@controller_class).to receive(:prepend_before_filter).with({})
+    expect(@controller_class).to receive(:prepend_before_action.with({})
     @controller_class.load_and_authorize_resource :foo => :bar, :prepend => true
   end
 
   it "authorize_resource setups a before filter which passes call to ControllerResource" do
     expect(cancan_resource_class = double).to receive(:authorize_resource)
     allow(CanCan::ControllerResource).to receive(:new).with(@controller, nil, :foo => :bar) {cancan_resource_class}
-    expect(@controller_class).to receive(:before_filter).with(:except => :show, :if => true) { |options, &block| block.call(@controller) }
+    expect(@controller_class).to receive(:before_action).with(:except => :show, :if => true) { |options, &block| block.call(@controller) }
     @controller_class.authorize_resource :foo => :bar, :except => :show, :if => true
   end
 
   it "load_resource setups a before filter which passes call to ControllerResource" do
     expect(cancan_resource_class = double).to receive(:load_resource)
     allow(CanCan::ControllerResource).to receive(:new).with(@controller, nil, :foo => :bar) {cancan_resource_class}
-    expect(@controller_class).to receive(:before_filter).with(:only => [:show, :index], :unless => false) { |options, &block| block.call(@controller) }
+    expect(@controller_class).to receive(:before_action).with(:only => [:show, :index], :unless => false) { |options, &block| block.call(@controller) }
     @controller_class.load_resource :foo => :bar, :only => [:show, :index], :unless => false
   end
 
   it "skip_authorization_check setups a before filter which sets @_authorized to true" do
-    expect(@controller_class).to receive(:before_filter).with(:filter_options) { |options, &block| block.call(@controller) }
+    expect(@controller_class).to receive(:before_action).with(:filter_options) { |options, &block| block.call(@controller) }
     @controller_class.skip_authorization_check(:filter_options)
     expect(@controller.instance_variable_get(:@_authorized)).to be(true)
   end
